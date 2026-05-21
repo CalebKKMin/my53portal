@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My 53 Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:            #f0f2f5;
+    --bg2:           #ffffff;
+    --bg3:           #f7f8fa;
+    --border:        rgba(0,0,0,0.08);
+    --border-hover:  rgba(0,0,0,0.18);
+    --text:          #1a1d23;
+    --text-muted:    #6b7280;
+    --text-dim:      #9ca3af;
+    --accent:        #4f6ef7;
+    --accent-glow:   rgba(79,110,247,0.07);
+
+    --orange:  #f97316;
+    --blue:    #3b82f6;
+    --green:   #22c55e;
+    --purple:  #a855f7;
+    --red:     #ef4444;
+    --teal:    #14b8a6;
+  }
+
+  html, body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', 'NanumGothic', '나눔고딕', sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 1.5rem 5rem;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse 70% 40% at 50% 0%, rgba(79,110,247,0.08) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 900px;
+  }
+
+  /* ── 헤더 ── */
+  header {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: fadeUp 0.55s ease both;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    border: 1px solid rgba(79,110,247,0.3);
+    padding: 4px 14px;
+    border-radius: 100px;
+    margin-bottom: 1.1rem;
+    background: rgba(79,110,247,0.06);
+  }
+
+  h1 {
+    font-size: clamp(1.9rem, 5.5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 0.65rem;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .subtitle {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
+
+  .divider {
+    width: 40px;
+    height: 2px;
+    background: var(--accent);
+    margin: 1.1rem auto;
+    border-radius: 2px;
+    opacity: 0.4;
+  }
+
+  /* ── 그리드 ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
+    gap: 14px;
+  }
+
+  /* ── 카드 ── */
+  .card {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.4rem 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.22s, transform 0.2s, box-shadow 0.22s;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  .card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+
+  /* 카드 상단 색상 바 */
+  .card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+    background: var(--card-color, var(--accent));
+    opacity: 0.75;
+    transition: opacity 0.2s;
+  }
+  .card:hover::after { opacity: 1; }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .icon-wrap {
+    width: 46px;
+    height: 46px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    background: var(--icon-bg, rgba(79,110,247,0.08));
+  }
+
+  .arrow {
+    font-size: 15px;
+    color: var(--text-dim);
+    transition: color 0.18s, transform 0.18s;
+    margin-top: 2px;
+  }
+  .card:hover .arrow {
+    color: var(--card-color, var(--accent));
+    transform: translate(2px, -2px);
+  }
+
+  .card-tag {
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    padding: 3px 9px;
+    border-radius: 100px;
+    margin-bottom: 0.55rem;
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--tag-color);
+  }
+
+  .card h2 {
+    font-size: 15.5px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+
+  .card p {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    flex: 1;
+    font-weight: 400;
+  }
+
+  .card-footer {
+    margin-top: 1.1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+    font-weight: 400;
+  }
+
+  /* ── 색상 테마 ── */
+  .c-amber {
+    --card-color: var(--orange);
+    --icon-bg: rgba(249,115,22,0.1);
+    --tag-bg: rgba(249,115,22,0.1);
+    --tag-color: #c2410c;
+  }
+  .c-blue {
+    --card-color: var(--blue);
+    --icon-bg: rgba(59,130,246,0.1);
+    --tag-bg: rgba(59,130,246,0.1);
+    --tag-color: #1d4ed8;
+  }
+  .c-green {
+    --card-color: var(--green);
+    --icon-bg: rgba(34,197,94,0.1);
+    --tag-bg: rgba(34,197,94,0.1);
+    --tag-color: #15803d;
+  }
+  .c-red {
+    --card-color: var(--red);
+    --icon-bg: rgba(239,68,68,0.1);
+    --tag-bg: rgba(239,68,68,0.1);
+    --tag-color: #b91c1c;
+  }
+  .c-purple {
+    --card-color: var(--purple);
+    --icon-bg: rgba(168,85,247,0.1);
+    --tag-bg: rgba(168,85,247,0.1);
+    --tag-color: #7e22ce;
+  }
+  .c-teal {
+    --card-color: var(--teal);
+    --icon-bg: rgba(20,184,166,0.1);
+    --tag-bg: rgba(20,184,166,0.1);
+    --tag-color: #0f766e;
+  }
+
+  /* ── 푸터 ── */
+  footer {
+    margin-top: 3rem;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-weight: 400;
+  }
+  footer span { color: var(--accent); }
+
+  /* ── 애니메이션 ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card { animation: fadeUp 0.5s ease both; }
+  .card:nth-child(1) { animation-delay: 0.06s; }
+  .card:nth-child(2) { animation-delay: 0.12s; }
+  .card:nth-child(3) { animation-delay: 0.18s; }
+  .card:nth-child(4) { animation-delay: 0.24s; }
+  .card:nth-child(5) { animation-delay: 0.30s; }
+  .card:nth-child(6) { animation-delay: 0.36s; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="badge">53교구 통합 포털</div>
+    <h1>My <span>53</span> Portal</h1>
+    <div class="divider"></div>
+    <p class="subtitle">청년 53교구 주요 시스템 모음</p>
+  </header>
+
+  <div class="grid">
+
+    <a class="card c-amber" href="https://calebkkmin.github.io/band53-profiles/" target="_blank">
+      <div class="card-top">
+        <div class="icon-wrap">🎸</div>
+        <span class="arrow">↗</span>
+      </div>
+      <span class="card-tag">멤버</span>
+      <h2>53 밴드 프로필 모음</h2>
+      <p>53교구 밴드 멤버들의 프로필을 한눈에 확인합니다.</p>
+      <div class="card-footer">band53-profiles</div>
+    </a>
+
+    <a class="card c-blue" href="https://calebkkmin.github.io/newfamily-lookup/" target="_blank">
+      <div class="card-top">
+        <div class="icon-wrap">🙋</div>
+        <span class="arrow">↗</span>
+      </div>
+      <span class="card-tag">새가족</span>
+      <h2>53청년부 새가족 조회</h2>
+      <p>새가족 등록 현황을 빠르게 검색하고 조회합니다.</p>
+      <div class="card-footer">newfamily-lookup</div>
+    </a>
+
+    <a class="card c-green" href="https://calebkkmin.github.io/cheju-2025/" target="_blank">
+      <div class="card-top">
+        <div class="icon-wrap">🌊</div>
+        <span class="arrow">↗</span>
+      </div>
+      <span class="card-tag">2025 선교</span>
+      <h2>2025 제주 단기선교</h2>
+      <p>2025년 제주 단기선교 일정 및 참가자 정보를 확인합니다.</p>
+      <div class="card-footer">cheju-2025</div>
+    </a>
+
+    <a class="card c-red" href="https://calebkkmin.github.io/srilanka-2025/" target="_blank">
+      <div class="card-top">
+        <div class="icon-wrap">✈️</div>
+        <span class="arrow">↗</span>
+      </div>
+      <span class="card-tag">2025 선교</span>
+      <h2>2025 스리랑카 단기선교</h2>
+      <p>2025년 스리랑카 해외 단기선교 관련 정보를 확인합니다.</p>
+      <div class="card-footer">srilanka-2025</div>
+    </a>
+
+    <a class="card c-purple" href="https://calebkkmin.github.io/group53-list/" target="_blank">
+      <div class="card-top">
+        <div class="icon-wrap">📋</div>
+        <span class="arrow">↗</span>
+      </div>
+      <span class="card-tag">2026 편성</span>
+      <h2>2026년 청년 53교구 순별 조회</h2>
+      <p>2026년 순 편성 현황을 조회하고 소속을 확인합니다.</p>
+      <div class="card-footer">group53-list</div>
+    </a>
+
+    <a class="card c-teal" href="https://calebkkmin.github.io/ctest003_lookup/" target="_blank">
+      <div class="card-top">
+        <div class="icon-wrap">🗾</div>
+        <span class="arrow">↗</span>
+      </div>
+      <span class="card-tag">2026 봉사</span>
+      <h2>2026 일본 청년봉사단</h2>
+      <p>2026년 일본 청년봉사단 참가자 및 일정 정보를 확인합니다.</p>
+      <div class="card-footer">ctest003_lookup</div>
+    </a>
+
+  </div>
+
+  <footer>
+    <p>© 2026 <span>53교구</span> — My 53 Portal</p>
+  </footer>
+
+</div>
+</body>
+</html>
